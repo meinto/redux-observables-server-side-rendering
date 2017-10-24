@@ -58,7 +58,26 @@ describe('ssr tests', () => {
       expect(instance).toBe(ssr)
     })
 
+    it('test that onLoadingComplete sets the inner loading flag to <true> and make the "epic functions" unusable', () => {
+      SSR_DEPENDENCIES_MOCK.notFound = jest.fn()
+      SSR_DEPENDENCIES_MOCK.redirect = jest.fn()
+      SSR_DEPENDENCIES_MOCK.observe = jest.fn()
 
+      expect(ssr.loadingComplete).toBe(false)   
+      ssr._onLoadingComplete()
+      expect(ssr.loadingComplete).toBe(true)
+      
+      ssr.notFound()
+      expect(SSR_DEPENDENCIES_MOCK.notFound).toHaveBeenCalled()
+
+      ssr.redirect()
+      expect(SSR_DEPENDENCIES_MOCK.redirect).toHaveBeenCalled()
+
+      ssr.observe()
+      expect(SSR_DEPENDENCIES_MOCK.observe).toHaveBeenCalled()
+    })
+
+    
 
   })
 

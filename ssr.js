@@ -44,13 +44,6 @@ export default class SSR {
     this.onNotFoundCallback = onNotFound
     return this
   }
-
-  onLoadingComplete = () => {
-    this.loadingComplete = true
-    Object.keys(SSR_DEPENDENCIES_MOCK).forEach(mockKey => {
-      this[mockKey] = SSR_DEPENDENCIES_MOCK[mockKey]
-    })
-  }
   
   observe = (action, reduxObservable) => {
 
@@ -91,7 +84,7 @@ export default class SSR {
   }
 
   redirect = redirectUrl => {
-    this.onLoadingComplete()
+    this._onLoadingComplete()
     this.onRedirectCallback(this.store, {
       status: 301,
       redirectUrl,
@@ -99,9 +92,16 @@ export default class SSR {
   }
 
   notFound = () => {
-    this.onLoadingComplete()
+    this._onLoadingComplete()
     this.onNotFoundCallback(this.store, {
       status: 404,
+    })
+  }
+
+  _onLoadingComplete = () => {
+    this.loadingComplete = true
+    Object.keys(SSR_DEPENDENCIES_MOCK).forEach(mockKey => {
+      this[mockKey] = SSR_DEPENDENCIES_MOCK[mockKey]
     })
   }
 
@@ -143,7 +143,7 @@ export default class SSR {
     }
     // console.log('update', this.pendingActions.length)
     if (this.pendingActions.length === 0 && !this.loadingComplete) {
-      this.onLoadingComplete()
+      this._onLoadingComplete()
       this.onLoadCallback(this.store)
     }
   }
