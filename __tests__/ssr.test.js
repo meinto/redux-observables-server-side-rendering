@@ -69,6 +69,34 @@ describe('ssr tests', () => {
       expect(ssr.store.dispatch).toHaveBeenCalledWith(ssr.initialAction)
     })
 
+    describe('middleware tests', () => {
+
+      let middleware = null
+      const store = 'store'
+      let next  = jest.fn()
+      const action = { type: 'SSR/MOCK_ACTION' }
+      beforeEach(() => {
+        ssr._onUpdate = jest.fn()
+        next = jest.fn()
+
+        middleware = ssr.middleware()
+      })
+
+      it('tests that the redux middleware reacts on actions starting with "SSR/" and updates pending actions in the stack', () => {
+        middleware(store)(next)(action)
+        expect(ssr._onUpdate).toHaveBeenCalledWith(action)
+        expect(next).toHaveBeenCalledWith(action)
+      })
+
+      it('tests that the redux middleware doesn`t updates pending actions when loading is complete', () => {
+        ssr.loadingComplete = true
+        middleware(store)(next)(action)
+        expect(ssr._onUpdate).not.toHaveBeenCalled()
+        expect(next).toHaveBeenCalledWith(action)
+      })
+
+    })
+
     it('test that "_onLoadingComplete" sets the inner loading flag to <true> and make the "epic functions" unusable', () => {
       SSR_DEPENDENCIES_MOCK.notFound = jest.fn()
       SSR_DEPENDENCIES_MOCK.redirect = jest.fn()
