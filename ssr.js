@@ -44,6 +44,24 @@ export default class SSR {
     this.onNotFoundCallback = onNotFound
     return this
   }
+
+  dispatchInitialAction = store => {
+    this._setStore(store)
+    if (this._hasValidStore()) {
+      this.store.dispatch(this.initialAction)
+    }
+  }
+
+  middleware = () => {
+    return store => next => action => { // eslint-disable-line
+
+      // console.log('ssr middleware', action)
+      if (action.type.indexOf('SSR/') === 0 && !this.loadingComplete)
+        this._onUpdate(action)
+
+      next(action)
+    }
+  }
   
   observe = (action, reduxObservable) => {
 
@@ -63,24 +81,6 @@ export default class SSR {
     )
     return obs
       .flatMap(actions => actions)
-  }
-
-  dispatchInitialAction = store => {
-    this._setStore(store)
-    if (this._hasValidStore()) {
-      this.store.dispatch(this.initialAction)
-    }
-  }
-
-  middleware = () => {
-    return store => next => action => { // eslint-disable-line
-
-      // console.log('ssr middleware', action)
-      if (action.type.indexOf('SSR/') === 0 && !this.loadingComplete)
-        this._onUpdate(action)
-
-      next(action)
-    }
   }
 
   redirect = redirectUrl => {

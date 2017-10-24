@@ -37,28 +37,39 @@ describe('ssr tests', () => {
       expect(ssr.actionCounter).toBe(0)
     })
 
-    it('tests that onLoad sets the inner callback function and returns the class instance for chaining', () => {
+    it('tests that "onLoad" sets the inner callback function and returns the class instance for chaining', () => {
       const onloadCallbackMock = 'onloadCallbackMock'
       const instance = ssr.onLoad(onloadCallbackMock)
       expect(ssr.onLoadCallback).toEqual(onloadCallbackMock)
       expect(instance).toBe(ssr)
     })
 
-     it('tests that onRedirect sets the inner callback function and returns the class instance for chaining', () => {
+     it('tests that "onRedirect" sets the inner callback function and returns the class instance for chaining', () => {
       const onRedirectCallbackMock = 'onRedirectCallbackMock'
       const instance = ssr.onRedirect(onRedirectCallbackMock)
       expect(ssr.onRedirectCallback).toEqual(onRedirectCallbackMock)
       expect(instance).toBe(ssr)
     })
 
-     it('tests that onNotFound sets the inner callback function and returns the class instance for chaining', () => {
+     it('tests that "onNotFound" sets the inner callback function and returns the class instance for chaining', () => {
       const onNotFoundCallbackMock = 'onNotFoundCallbackMock'
       const instance = ssr.onNotFound(onNotFoundCallbackMock)
       expect(ssr.onNotFoundCallback).toEqual(onNotFoundCallbackMock)
       expect(instance).toBe(ssr)
     })
 
-    it('test that onLoadingComplete sets the inner loading flag to <true> and make the "epic functions" unusable', () => {
+    it('tests that "dispatchInitialAction" sets the store and dispatches the initial action', () => {
+      const store = { dispatch: jest.fn() }
+      ssr._setStore = jest.fn(() => ssr.store = store)
+      ssr._hasValidStore = jest.fn(() => true)
+
+      ssr.dispatchInitialAction(store)
+      expect(ssr._setStore).toHaveBeenCalledWith(store)
+      expect(ssr._hasValidStore).toHaveBeenCalled()
+      expect(ssr.store.dispatch).toHaveBeenCalledWith(ssr.initialAction)
+    })
+
+    it('test that "_onLoadingComplete" sets the inner loading flag to <true> and make the "epic functions" unusable', () => {
       SSR_DEPENDENCIES_MOCK.notFound = jest.fn()
       SSR_DEPENDENCIES_MOCK.redirect = jest.fn()
       SSR_DEPENDENCIES_MOCK.observe = jest.fn()
@@ -77,7 +88,6 @@ describe('ssr tests', () => {
       expect(SSR_DEPENDENCIES_MOCK.observe).toHaveBeenCalled()
     })
 
-    
 
   })
 
