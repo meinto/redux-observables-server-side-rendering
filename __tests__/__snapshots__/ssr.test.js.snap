@@ -1,5 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ssr tests SSR class tests snapshots the SSR.ACTION_TYPES 1`] = `
+Object {
+  "ERROR": "SSR/ERROR",
+  "PENDING": "SSR/PENDING",
+  "SUCCESS": "SSR/SUCCESS",
+}
+`;
+
+exports[`ssr tests SSR class tests tests that all class variables are set properly after initialization 1`] = `
+Object {
+  "payload": Object {
+    "pathname": "mock/location",
+  },
+  "type": "@@router/LOCATION_CHANGE",
+}
+`;
+
 exports[`ssr tests mock tests snapshots the mock object 1`] = `
 Object {
   "notFound": [Function],

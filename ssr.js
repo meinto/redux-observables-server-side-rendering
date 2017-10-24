@@ -31,17 +31,17 @@ export default class SSR {
   }
 
   onLoad = onLoad => {
-    this._onLoad = onLoad
+    this.onLoadCallback = onLoad
     return this
   }
 
   onRedirect = onRedirect => {
-    this._onRedirect = onRedirect
+    this.onRedirectCallback = onRedirect
     return this
   }
 
   onNotFound = onNotFound => {
-    this._onNotFound = onNotFound
+    this.onNotFoundCallback = onNotFound
     return this
   }
 
@@ -72,6 +72,39 @@ export default class SSR {
       .flatMap(actions => actions)
   }
 
+  dispatchInitialAction = store => {
+    this._setStore(store)
+    if (this._hasValidStore()) {
+      this.store.dispatch(this.initialAction)
+    }
+  }
+
+  middleware = () => {
+    return store => next => action => { // eslint-disable-line
+
+      // console.log('ssr middleware', action)
+      if (action.type.indexOf('SSR/') === 0 && !this.loadingComplete)
+        this._onUpdate(action)
+
+      next(action)
+    }
+  }
+
+  redirect = redirectUrl => {
+    this.onLoadingComplete()
+    this.onRedirectCallback(this.store, {
+      status: 301,
+      redirectUrl,
+    })
+  }
+
+  notFound = () => {
+    this.onLoadingComplete()
+    this.onNotFoundCallback(this.store, {
+      status: 404,
+    })
+  }
+
   // must be called after initialization!!!
   _setStore = store => {
     this.store = store
@@ -80,13 +113,6 @@ export default class SSR {
   _hasValidStore = () => {
     if (!this.store) throw new Error('SSR: store must be set after initialization!!!')
     return true
-  }
-
-  dispatchInitialAction = store => {
-    this._setStore(store)
-    if (this._hasValidStore()) {
-      this.store.dispatch(this.initialAction)
-    }
   }
 
   _addPendingAction = ssrAction => {
@@ -118,34 +144,8 @@ export default class SSR {
     // console.log('update', this.pendingActions.length)
     if (this.pendingActions.length === 0 && !this.loadingComplete) {
       this.onLoadingComplete()
-      this._onLoad(this.store)
+      this.onLoadCallback(this.store)
     }
-  }
-
-  middleware = () => {
-    return store => next => action => { // eslint-disable-line
-
-      // console.log('ssr middleware', action)
-      if (action.type.indexOf('SSR/') === 0 && !this.loadingComplete)
-        this._onUpdate(action)
-
-      next(action)
-    }
-  }
-
-  redirect = redirectUrl => {
-    this.onLoadingComplete()
-    this._onRedirect(this.store, {
-      status: 301,
-      redirectUrl,
-    })
-  }
-
-  notFound = () => {
-    this.onLoadingComplete()
-    this._onNotFound(this.store, {
-      status: 404,
-    })
   }
 
 }
