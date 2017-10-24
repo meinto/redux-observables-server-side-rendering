@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ssr tests mock tests snapshots the mock object 1`] = `
+Object {
+  "notFound": [Function],
+  "observe": [Function],
+  "redirect": [Function],
+}
+`;
