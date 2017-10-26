@@ -143,7 +143,6 @@ describe('ssr tests', () => {
         ssr._setStore(store)
         const zippedObservable = ssr.observe(action, observable)
 
-        // expect.assertions(1)
         zippedObservable
           .subscribe(
             mappedAction => {
@@ -161,6 +160,34 @@ describe('ssr tests', () => {
         )
       })
     
+    })
+
+    it('tests that the "redirect" method completes the loading state and calls the redirect callback with given url', () => {
+      const store = 'mockStore'
+      const redirectUrl = '/redirect/to/url'
+      
+      ssr._onLoadingComplete = jest.fn()
+      ssr.onRedirectCallback = jest.fn()
+      ssr._setStore(store)
+      
+      ssr.redirect(redirectUrl)
+      expect(ssr._onLoadingComplete).toHaveBeenCalled()
+      expect(ssr.onRedirectCallback).toHaveBeenCalledWith(store, {
+        status: 301,
+        redirectUrl,
+      })
+    })
+
+    it('tests that the "notFound" method completes the loading state and calls the notFound callback with status 404', () => {
+      const store = 'mockStore'
+      
+      ssr._onLoadingComplete = jest.fn()
+      ssr.onNotFoundCallback = jest.fn()
+      ssr._setStore(store)
+      
+      ssr.notFound()
+      expect(ssr._onLoadingComplete).toHaveBeenCalled()
+      expect(ssr.onNotFoundCallback).toHaveBeenCalledWith(store, { status: 404 })
     })
 
   })
