@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs'
 import SSR, { SSR_DEPENDENCIES_MOCK } from '../ssr'
 
 
@@ -116,6 +117,51 @@ describe('ssr tests', () => {
       expect(SSR_DEPENDENCIES_MOCK.observe).toHaveBeenCalled()
     })
 
+    describe('observable method tests', () => {
+
+      let action, observable = null
+      beforeEach(() => {
+        action = { type: 'mockType' }
+        observable = Observable.of(action)
+        global.Date = jest.fn(() => ({
+          getTime: jest.fn(() => '123456789')
+        }))
+      })
+
+      it('tests that the "observe" method takes an action and a observable and adds an action object to pending actions', () => {
+        ssr._addPendingAction = jest.fn()
+
+        ssr.observe(action, observable)
+        expect(ssr._addPendingAction).toHaveBeenCalledWith({
+          actionType: action.type,
+          time: '123456789',
+        })
+      })
+
+      it('tests that the "observe" method zips the handed over observable and adds a custom observable to detect finish', done => {
+        const store = { dispatch: jest.fn() }
+        ssr._setStore(store)
+        const zippedObservable = ssr.observe(action, observable)
+
+        // expect.assertions(1)
+        zippedObservable
+          .subscribe(
+            mappedAction => {
+              if (mappedAction.time)
+                expect(mappedAction).toEqual({ 
+                  type: SSR.ACTION_TYPES.SUCCESS,
+                  actionType: 'mockType',
+                  time: '123456789' 
+                })
+              else 
+                expect(mappedAction).toEqual(action)
+            },
+            () => {},
+            () => { done() },
+        )
+      })
+    
+    })
 
   })
 

@@ -4,7 +4,8 @@
   "description": "library to use redux observables in combination with ssr and react-router",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "testw": "jest --watch"
   },
   "repository": {
     "type": "git",

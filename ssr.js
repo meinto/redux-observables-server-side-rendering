@@ -55,7 +55,6 @@ export default class SSR {
   middleware = () => {
     return store => next => action => { // eslint-disable-line
 
-      // console.log('ssr middleware', action)
       if (action.type.indexOf('SSR/') === 0 && !this.loadingComplete)
         this._onUpdate(action)
 
