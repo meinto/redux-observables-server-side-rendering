@@ -7,7 +7,7 @@
     "test": "jest",
     "testw": "jest --watch",
     "build": "babel lib -d build",
-    "prepublish": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -30,6 +30,7 @@
     "rxjs": "*"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-jest": "^21.2.0",
     "babel-plugin-syntax-class-properties": "^6.13.0",
     "babel-plugin-transform-class-properties": "^6.24.1",

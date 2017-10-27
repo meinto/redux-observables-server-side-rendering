@@ -1,6 +1,7 @@
 # redux-observables-server-side-rendering
 
-[![travis build](https://travis-ci.org/meinto/react-native-event-listeners.svg?branch=master)](https://travis-ci.org/meinto/react-native-event-listeners)
+[![npm version](https://badge.fury.io/js/redux-observables-server-side-rendering.svg)](https://www.npmjs.com/package/redux-observables-server-side-rendering)
+[![travis build](https://travis-ci.org/meinto/redux-observables-server-side-rendering.svg?branch=master)](https://travis-ci.org/meinto/redux-observables-server-side-rendering)
 
 A middleware that works in combination with `react-router`, `react-router-redux` and `redux-observables`.
 
