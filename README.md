@@ -6,7 +6,9 @@ A middleware that works in combination with `react-router`, `react-router-redux`
 
 ## Installation
 
-> Package will be available on npm soon...
+```
+npm install --save redux-observables-server-side-rendering
+```
 
 ## Usage
 
