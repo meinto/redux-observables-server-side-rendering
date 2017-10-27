@@ -104,7 +104,6 @@ export default class SSR {
     })
   }
 
-  // must be called after initialization!!!
   _setStore = store => {
     this.store = store
   }
@@ -122,25 +121,20 @@ export default class SSR {
   }
 
   _onUpdate = action => {
-    // console.log('update', this.pendingActions.length)
     switch (action.type) {
       case SSR.ACTION_TYPES.SUCCESS: {
-        // console.log('------------------ success')
         this.pendingActions = this.pendingActions.filter(pendingAction => {
           return action.time !== pendingAction.time && action.actionType !== pendingAction.actionType
         })
         break
       }
       case SSR.ACTION_TYPES.PENDING: {
-        // console.log('------------------ pending')
         break
       }
       case SSR.ACTION_TYPES.ERROR: {
-        // console.log('------------------ error')
         break
       }
     }
-    // console.log('update', this.pendingActions.length)
     if (this.pendingActions.length === 0 && !this.loadingComplete) {
       this._onLoadingComplete()
       this.onLoadCallback(this.store)

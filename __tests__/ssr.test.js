@@ -190,6 +190,59 @@ describe('ssr tests', () => {
       expect(ssr.onNotFoundCallback).toHaveBeenCalledWith(store, { status: 404 })
     })
 
+    it('tests that _setStore ... sets the store ... Oo', () => {
+      const store = 'mockStore'
+      ssr._setStore(store)
+      expect(ssr.store).toEqual(store)
+    })
+
+    it('tests that the store is set', () => {
+      ssr.store = 'mockStore'
+      expect(ssr._hasValidStore()).toBe(true)
+    })
+
+    it('tests that _addPendingAction adds the action to the pending list and dispatches a <SSR/.*> action', () => {
+      const store = { dispatch: jest.fn() }
+      ssr._setStore(store)
+      const action = {
+        type: 'mockType',
+        data: 'mockData',
+      }
+      ssr._addPendingAction(action)
+      expect(ssr.pendingActions).toEqual([action])
+      expect(store.dispatch).toHaveBeenCalledWith({
+        type: SSR.ACTION_TYPES.PENDING,
+        data: 'mockData',
+      })
+    })
+
+    describe('_onUpdate method', () => {
+
+      it('tests that a ssr success action removes the corresponding pending action from the pending list', () => {
+        const store = { dispatch: jest.fn() }
+        ssr._setStore(store)
+        const action = { 
+          type: 'mockType',
+          time: '123456789',
+        }
+
+        ssr._onLoadingComplete = jest.fn()
+        ssr.onLoadCallback = jest.fn()
+        
+        ssr._addPendingAction(action)
+        ssr._onUpdate({
+          type: SSR.ACTION_TYPES.SUCCESS,
+          actionType: action.type,
+          time: action.time,
+        })
+        
+        expect(ssr.pendingActions.length).toBe(0)
+        expect(ssr._onLoadingComplete).toHaveBeenCalled()
+        expect(ssr.onLoadCallback).toHaveBeenCalledWith(store)
+      })
+
+    })
+
   })
 
 })
