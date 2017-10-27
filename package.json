@@ -37,6 +37,7 @@
   "jest": {
     "transform": {
       "^.+\\.js$": "<rootDir>/jest.transform.js"
-    }
+    },
+    "modulePathIgnorePatterns": ["Examples/"]
   }
 }
