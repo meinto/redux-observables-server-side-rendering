@@ -14,9 +14,9 @@ npm install --save redux-observables-server-side-rendering
 
 > FIRST OF ALL  
 > This is very customized to an existing project, but it works.  
-> If you have suggestions to do this in a better or more common way don't hesitate to make a pull request or message me.
+> If you have suggestions to do this in a better or more common way don't, hesitate to make a pull request or message me.
 
-Once you've configured your application you can use the ssr object created inside the server, handed over to the store and the epic middleware as dependencie, in your own epic implementations.
+Once you've configured your application you can use the ssr object created inside the server, handed over to the store and the epic middleware as dependency, in your own epic implementations.
 
 ```js
 // example epic
@@ -34,7 +34,7 @@ const myDataFetchingEpic = (action$, store, ssr) => actions$
 
 ```
 
-**You can find below how to configure your application to get ssr with redux observables work:**
+**You can find below how to configure your application to get ssr with redux-observables work:**
 
 ## Configuration
 
@@ -50,7 +50,10 @@ src
 | | | ...
 | | - containers
 | | - middlewares
-| | | - reactRouterDataLoading.js // <-- this file must be written by yourself
+| | | - reactRouterDataLoading.js // <-- this file must be written by yourself.
+                                  // It is responsible to trigger the epics for the requested page url
+                                  // and reacts on react-router-redux action-types which are fired
+                                  // by the middleware of this library
 | | - modules
 | - server
 | | - index.js
@@ -82,7 +85,8 @@ app.use('*', (req, res) => {
       processApp(store, history, res, req, cacheName) // helper function to renderToString(YourApp)
     })
 
-    const store = configureStore({
+    const initialState = { ... }
+    const store = configureStore(initialState, {
       ... // your store configuration
       middlewares: [reduxObservablesSSR.middleware()],
       epicOptions: {
@@ -115,6 +119,7 @@ To make ssr with `redux-observables` work, we have to configure the store:
 ```js
 // store.js
 ...
+// this mock is needed for the client.js to work
 import { SSR_DEPENDENCIES_MOCK } from 'redux-observables-server-side-rendering'
 
 const initalOptions = {
@@ -126,9 +131,16 @@ const initalOptions = {
 }
 export const configureStore = (initialState = {}, options = initialOptions) => {
   let middlewares = []
+  
   ...
+  
+  // hand over the instance of the SSR object (namend reduxObservablesSSR in the server implementation) 
+  // to the epic middleware as dependency.
+  // This will make the object available in all of your epic's as third argument.
   middlewares = [...middlewares, createEpicMiddleware(rootEpic, _options.epicOptions)]
+  
   ...
+  
   // its important that the ssr middleware stands at the last place of the array
   if (_options.middlewares.length > 0)
     middlewares = [...middlewares, ..._options.middlewares]
