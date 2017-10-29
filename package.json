@@ -46,9 +46,10 @@
       "^.+\\.js$": "<rootDir>/jest.transform.js"
     },
     "modulePathIgnorePatterns": [
-      "Examples/"
+      "Examples/",
+      "build/"
     ],
     "collectCoverage": true,
-    "collectCoverageFrom" : ["lib/**/*.{js,jsx}", "!lib/__tests__/**"]
+    "collectCoverageFrom" : ["lib/**/*.{js,jsx}"]
   }
 }
