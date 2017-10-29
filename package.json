@@ -42,13 +42,14 @@
     "jest": "^21.2.1"
   },
   "jest": {
-    "collectCoverage": true,
     "transform": {
       "^.+\\.js$": "<rootDir>/jest.transform.js"
     },
     "modulePathIgnorePatterns": [
       "Examples/"
     ],
+    "collectCoverage": true,
+    "collectCoverageFrom" : ["lib/**/*.{js,jsx}", "!**/node_modules/**", "!**/vendor/**"],
     "setupTestFrameworkScriptFile": "./setup-jasmine-env.js"
   }
 }

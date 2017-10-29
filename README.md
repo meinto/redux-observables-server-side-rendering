@@ -2,6 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/redux-observables-server-side-rendering.svg)](https://www.npmjs.com/package/redux-observables-server-side-rendering)
 [![travis build](https://travis-ci.org/meinto/redux-observables-server-side-rendering.svg?branch=master)](https://travis-ci.org/meinto/redux-observables-server-side-rendering)
+[![Coverage Status](https://coveralls.io/repos/github/meinto/redux-observables-server-side-rendering/badge.svg?branch=master)](https://coveralls.io/github/meinto/redux-observables-server-side-rendering?branch=master)
 
 A middleware that works in combination with `react-router`, `react-router-redux` and `redux-observables`.
 

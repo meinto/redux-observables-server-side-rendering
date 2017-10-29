@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`index file tests snapshots exports 1`] = `
+Object {
+  "SSR": [Function],
+  "SSR_DEPENDENCIES_MOCK": Object {
+    "notFound": [Function],
+    "observe": [Function],
+    "redirect": [Function],
+  },
+}
+`;
