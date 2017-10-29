@@ -49,7 +49,6 @@
       "Examples/"
     ],
     "collectCoverage": true,
-    "collectCoverageFrom" : ["lib/**/*.{js,jsx}", "!**/node_modules/**", "!**/vendor/**"],
-    "setupTestFrameworkScriptFile": "./setup-jasmine-env.js"
+    "collectCoverageFrom" : ["lib/**/*.{js,jsx}", "!lib/__tests__/**"]
   }
 }
